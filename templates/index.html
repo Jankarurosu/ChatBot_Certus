@@ -20,7 +20,38 @@
         }
 
         h1 {
-            color: #333;
+            color: #001f3f;
+            font-size: 2.5em; 
+            margin-bottom: 20px; 
+        }
+
+        #container {
+            display: flex;
+            justify-content: space-between;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+    
+        #instructions-container {
+            width: 150%;
+            padding: 20px;
+            box-sizing: border-box;
+            background-color: #ecf0f1;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+    
+        .example {
+            background-color: #fff;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            padding: 10px;
+            margin-bottom: 15px;
+        }
+    
+        #chat-and-teach {
+            width: 50%;
+            box-sizing: border-box;
         }
 
         #chat-container {
@@ -81,7 +112,7 @@
             padding: 20px;
             margin: 20px;
             box-sizing: border-box;
-            width: 300px;
+            width: 350px;
             max-width: 100%;
         }
 
@@ -111,19 +142,49 @@
 </head>
 <body>
     <h1>ChatbotCertus</h1>
-    <div id="chat-container">
-        <div id="chat"></div>
-        <div id="user-input">
-            <!-- Modificación: Agrega el evento onkeydown para el input de usuario -->
-            <input type="text" id="user-message" placeholder="Escribe tu mensaje..." onkeydown="handleKeyPress(event)">
-            <button onclick="sendMessage()">Enviar</button>
+    <div id="container">
+        <!-- Sección de Instrucciones y Ejemplos de Uso -->
+        <div id="instructions-container">
+            <h2>Instrucciones de Uso</h2>
+            <p>Bienvenido a ChatbotCertus, un asistente virtual. Aquí te explicamos cómo usar el sistema:</p>
+            <ol>
+                <li>Escribe tus preguntas en el cuadro de texto y presiona "Enviar" o la tecla Enter.</li>
+                <li>Evita preguntas o solicitudes inapropiadas, como menciones de muerte o intentos de hackeo.</li>
+                <li>Si el bot no conoce la respuesta, puedes enseñarle proporcionando la pregunta y la respuesta.</li>
+            </ol>
+    
+            <h2>Ejemplos de Uso</h2>
+            <p>A continuación, te mostramos algunos ejemplos de cómo interactuar con el chatbot:</p>
+            <div class="example">
+                <p>Usuario: ¿Cómo estás?</p>
+                <p>Bot: Soy un Chatbot por lo tanto no me puedo sentir ni bien, ni mal.</p>
+            </div>
+            <p>A continuación, te mostramos algunos ejemplos de cómo enseñarle al chatbot:</p>
+            <div class="example">
+                <p>Usuario: Escribe pregunta: ¿Cuánto es 2 mas 2?</p>
+                <p>Usuario: Escribe respuesta: La respuesta es 4</p>
+                <p>Bot: ¡Gracias por enseñarme!.</p>
+            </div>
         </div>
-    </div>
-    <div id="teach-bot">
-        <h2>Enseñar respuesta al bot</h2>
-        <input type="text" id="teach-message" placeholder="Escribe la pregunta...">
-        <input type="text" id="teach-answer" placeholder="Escribe la respuesta...">
-        <button onclick="teachBot()">Enseñar</button>
+    
+        <!-- Chatbot y Enseñar Respuesta al Bot -->
+        <div id="chat-and-teach">
+            <div id="chat-container">
+                <div id="chat"></div>
+                <div id="user-input">
+                    <!-- Modificación: Agrega el evento onkeydown para el input de usuario -->
+                    <input type="text" id="user-message" placeholder="Escribe tu mensaje..." onkeydown="handleKeyPress(event)">
+                    <button onclick="sendMessage()">Enviar</button>
+                </div>
+            </div>
+    
+            <div id="teach-bot">
+                <h2>Enseñar respuesta al bot</h2>
+                <input type="text" id="teach-message" placeholder="Escribe la pregunta...">
+                <input type="text" id="teach-answer" placeholder="Escribe la respuesta...">
+                <button onclick="teachBot()">Enseñar</button>
+            </div>
+        </div>
     </div>
     <script>
         function sendMessage() {
