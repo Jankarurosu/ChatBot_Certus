@@ -1,0 +1,194 @@
+<!-- templates/index.html -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ChatbotCertus</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f2f2f2;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+        }
+
+        h1 {
+            color: #333;
+        }
+
+        #chat-container {
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            width: 300px;
+            max-width: 100%;
+            margin: 20px;
+            box-sizing: border-box;
+            display: flex;
+            flex-direction: column;
+        }
+
+        #chat {
+            padding: 10px;
+            max-height: 200px; 
+            overflow-y: auto;
+        }
+
+        .message {
+            margin-bottom: 10px;
+            padding: 8px 12px;
+            border-radius: 5px;
+        }
+
+        .user {
+            background-color: #3498db;
+            color: #fff;
+            align-self: flex-end;
+        }
+
+        .bot {
+            background-color: #ecf0f1;
+            color: #333;
+            align-self: flex-start;
+        }
+
+        #user-input {
+            display: flex;
+            padding: 10px;
+            box-sizing: border-box;
+        }
+
+        #user-message {
+            flex: 1;
+            padding: 8px;
+            border: none;
+            border-radius: 5px;
+            margin-right: 10px;
+        }
+
+        #teach-bot {
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            margin: 20px;
+            box-sizing: border-box;
+            width: 300px;
+            max-width: 100%;
+        }
+
+        #teach-message,
+        #teach-answer {
+            width: 100%;
+            margin-bottom: 10px;
+            padding: 8px;
+            box-sizing: border-box;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+
+        button {
+            padding: 8px 12px;
+            background-color: #3498db;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #2980b9;
+        }
+    </style>
+</head>
+<body>
+    <h1>ChatbotCertus</h1>
+    <div id="chat-container">
+        <div id="chat"></div>
+        <div id="user-input">
+            <!-- Modificación: Agrega el evento onkeydown para el input de usuario -->
+            <input type="text" id="user-message" placeholder="Escribe tu mensaje..." onkeydown="handleKeyPress(event)">
+            <button onclick="sendMessage()">Enviar</button>
+        </div>
+    </div>
+    <div id="teach-bot">
+        <h2>Enseñar respuesta al bot</h2>
+        <input type="text" id="teach-message" placeholder="Escribe la pregunta...">
+        <input type="text" id="teach-answer" placeholder="Escribe la respuesta...">
+        <button onclick="teachBot()">Enseñar</button>
+    </div>
+    <script>
+        function sendMessage() {
+            var userMessage = document.getElementById("user-message").value;
+            if (userMessage.trim() !== "") {
+                // Enviar el mensaje al servidor Flask
+                fetch("/send_message", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify({ message: userMessage }),
+                })
+                .then(response => response.json())
+                .then(data => {
+                    displayMessage(data.message, "user");
+                    displayMessage(data.response, "bot");
+                })
+                .catch(error => console.error("Error:", error));
+
+                // Limpiar el campo de entrada del usuario
+                document.getElementById("user-message").value = "";
+            }
+        }
+
+        //función para manejar la pulsación de tecla Enter
+        function handleKeyPress(event) {
+            if (event.key === "Enter") {
+                sendMessage();
+            }
+        }
+    
+        function teachBot() {
+            var teachMessage = document.getElementById("teach-message").value;
+            var teachAnswer = document.getElementById("teach-answer").value;
+            if (teachMessage.trim() !== "" && teachAnswer.trim() !== "") {
+                // Enseñar respuesta al bot al servidor Flask
+                fetch("/teach_bot", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify({ teach_message: teachMessage, teach_answer: teachAnswer }),
+                })
+                .then(response => response.json())
+                .then(data => {
+                    displayMessage(data.message, "user");
+                    displayMessage("Bot: " + data.teach_answer, "bot");
+                })
+                .catch(error => console.error("Error:", error));
+    
+                // Limpiar los campos de enseñar al bot
+                document.getElementById("teach-message").value = "";
+                document.getElementById("teach-answer").value = "";
+            }
+        }
+    
+        function displayMessage(message, sender) {
+            var chatContainer = document.getElementById("chat");
+            var messageElement = document.createElement("div");
+            messageElement.className = sender;
+            messageElement.innerText = message;
+            chatContainer.appendChild(messageElement);
+            chatContainer.scrollTop = chatContainer.scrollHeight;
+        }
+    </script>
+</body>
+</html>
