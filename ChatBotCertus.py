@@ -23,7 +23,7 @@ def save_answers(answers):
 
 # Verificar si el mensaje es considerado "malo"
 def is_bad_question(message):
-    bad_keywords = ["muerte", "suicidio", "hackear"]
+    bad_keywords = ["muerte", "hackear"]
     for keyword in bad_keywords:
         if keyword in message.lower():
             return True
